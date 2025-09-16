@@ -75,9 +75,9 @@ API_KEY = getenv("API_KEY", 'NxGBNexGenBots313fac') # youtube song api ke #
 
 # ------------------------------------------------------------------------
 # -------------------------------------------------------------------------
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/ARISHFA_UPDATE")
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/+PaEtaAu9DI9mYzc9")
-CHAT = getenv("CHAT", "https://t.me/+PaEtaAu9DI9mYzc9")
+SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/AvengersNetwork")
+SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/+ijVUQc7TNEUwNmNl")
+CHAT = getenv("CHAT", "https://t.me/+ijVUQc7TNEUwNmNl")
 # ------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------
 

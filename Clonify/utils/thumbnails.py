@@ -74,7 +74,7 @@ async def get_thumb(videoid):
         arial = ImageFont.truetype("Clonify/assets/font2.ttf", 30)
         font = ImageFont.truetype("Clonify/assets/font.ttf", 30)
         text_size = draw.textsize("MD ISTKHAR    ", font=font)
-        draw.text((1280 - text_size[0] - 10, 10), "MD ISTKHAR    ", fill="white", font=font)
+        draw.text((1280 - text_size[0] - 10, 10), "@iTzAvengers    ", fill="white", font=font)
         draw.text(
             (55, 560),
             f"{channel} | {views[:23]}",

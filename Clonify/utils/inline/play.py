@@ -70,7 +70,7 @@ def stream_markup_timer(_, chat_id, played, dur):
          [
              InlineKeyboardButton(text="⌯ ᴏᴡɴᴇꝛ ⌯", url="t.me/iTzAvengers"),
              InlineKeyboardButton(text="๏ ᴧᴅᴅ ϻє ๏", url=f"https://t.me/{app.username}?startgroup=true"),
-             InlineKeyboardButton(text="ѕᴜᴘᴘσʀᴛ", url="https://t.me/+ijVUQc7TNEUwNmNl")
+             InlineKeyboardButton(text="⌯ sᴜᴘᴘσꝛᴛ ⌯", url="https://t.me/+ijVUQc7TNEUwNmNl")
          ],
         [
             InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close"),

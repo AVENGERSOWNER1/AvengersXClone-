@@ -8,15 +8,15 @@ import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from youtubesearchpython.__future__ import VideosSearch
-from Spy.utils.database import is_on_off, get_api_key
-from Spy.utils.formatters import time_to_seconds
+from Clonify.utils.database import is_on_off, get_api_key
+from Clonify.utils.formatters import time_to_seconds
 import os
 import glob
 import random
 import logging
 import aiohttp
 import config
-from config import API_URL, VIDEO_API_URL
+from config import API_URL, VIDEO_API_URL, BABYAPI
 from urllib.parse import urlparse
 
 
@@ -33,7 +33,7 @@ def cookie_txt_file():
 
 
 async def download_song(link: str):
-    from Spy import app
+    from Clonify import app
     x = re.compile(
         r'(?:https?://)?(?:www\.)?(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})'
     )
@@ -47,7 +47,7 @@ async def download_song(link: str):
     loop = asyncio.get_running_loop()
 
     def get_url():
-        api_url = f"http://152.42.189.60:1470/song?query={vidid}"
+        api_url = BABYAPI
         try:
             return requests.get(api_url).json().get("link")
         except:

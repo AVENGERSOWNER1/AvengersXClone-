@@ -29,6 +29,7 @@ ASSUSERNAME = getenv("ASSUSERNAME" , "Sonali")
 #---------------------------------------------------------------
 MONGO_DB_URI = getenv("MONGO_DB_URI")
 API_KEY = getenv("API_KEY")
+VIDEO_API_URL = getenv("VIDEO_API_URL")
 BABYAPI = f"http://152.42.189.60:1470/song?query={vidid}"
 #---------------------------------------------------------------
 #---------------------------------------------------------------

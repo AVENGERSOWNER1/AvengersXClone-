@@ -30,7 +30,7 @@ ASSUSERNAME = getenv("ASSUSERNAME" , "Sonali")
 MONGO_DB_URI = getenv("MONGO_DB_URI")
 API_KEY = getenv("API_KEY")
 VIDEO_API_URL = getenv("VIDEO_API_URL")
-BABYAPI = "https://ytapi-i0t6.onrender.com"
+BABYAPI = "http://136.243.218.207:1470"
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 

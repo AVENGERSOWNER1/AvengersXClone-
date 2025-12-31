@@ -28,9 +28,8 @@ ASSUSERNAME = getenv("ASSUSERNAME" , "Sonali")
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://AvengersOp:AvengersOp22@avengers.u7mdprz.mongodb.net/?retryWrites=true&w=majority&appName=Avengers")
-API_KEY = getenv("API_KEY")
-VIDEO_API_URL = getenv("VIDEO_API_URL")
-BABYAPI = "http://136.243.218.207:1470"
+BASE_URL = getenv("BASE_URL", "https://babyapi.pro")
+API_KEY = getenv("API_KEY", "BABYX30DB2DA897A")
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 

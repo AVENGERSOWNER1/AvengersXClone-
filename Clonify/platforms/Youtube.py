@@ -7,16 +7,18 @@ import requests
 import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
-from youtubesearchpython.__future__ import VideosSearch
-from Clonify.utils.database import is_on_off
-from Clonify.utils.formatters import time_to_seconds
+from py_yt import VideosSearch
+from Spy.utils.database import is_on_off, get_api_key
+from Spy.utils.formatters import time_to_seconds
 import os
 import glob
 import random
 import logging
 import aiohttp
 import config
-from config import API_URL, API_KEY, VIDEO_API_URL, BABYAPI
+from config import LOGGER_ID
+from Spy import app
+from config import BASE_URL, API_KEY
 from urllib.parse import urlparse
 
 
@@ -32,103 +34,46 @@ def cookie_txt_file():
     return cookie_file
 
 
+async def _download_media(link: str, kind: str, exts: list[str], wait: int = 60):
+    vid = link.split("v=")[-1].split("&")[0]
+    os.makedirs("downloads", exist_ok=True)
+    for ext in exts:
+        path = f"downloads/{vid}.{ext}"
+        if os.path.exists(path):
+            return path
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"{BASE_URL}/api/{kind}?query={vid}&api={API_KEY}"
+            ) as resp:
+                res = await resp.json()
+            stream = res.get("stream")
+            if not stream:
+                raise Exception(f"{kind} stream not found")
+            for _ in range(wait):
+                async with session.get(stream) as r:
+                    if r.status == 200:
+                        return stream
+                    if r.status in (202, 204, 404):
+                        await asyncio.sleep(2)
+                        continue
+                    raise Exception(f"{kind} failed ({r.status})")
+            raise Exception(f"{kind} processing timeout")
+    except Exception as e:
+        await app.send_message(
+            LOGGER_ID,
+            f"❌ **{kind.upper()} API ERROR**\n\n"
+            f"🔗 `{link}`\n"
+            f"⚠️ `{str(e)[:120]}`"
+        )
+        raise
+
+
 async def download_song(link: str):
-    from Clonify import app
-    x = re.compile(
-        r'(?:https?://)?(?:www\.)?(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})'
-    )
-    video_id = x.search(link)
-    vidid = video_id.group(1) if video_id else link
-
-    xyz = os.path.join("downloads", f"{vidid}.mp3")
-    if os.path.exists(xyz):
-        return xyz
-
-    loop = asyncio.get_running_loop()
-
-    def get_url():
-        api_url = f"{BABYAPI}/song?query={vidid}"
-        try:
-            return requests.get(api_url).json().get("link")
-        except:
-            return None
-
-    download_url = await loop.run_in_executor(None, get_url)
-    parsed = urlparse(download_url)
-    parts = parsed.path.strip("/").split("/")
-    cname, msgid = str(parts[0]), int(parts[1])
-    msg = await app.get_messages(cname, msgid)
-    await msg.download(file_name=xyz)
-
-    while not os.path.exists(xyz):
-        await asyncio.sleep(0.5)
-
-    return xyz
+    return await _download_media(link, "song", ["mp3", "m4a", "webm"])
 
 async def download_video(link: str):
-    video_id = link.split('v=')[-1].split('&')[0]
-
-    download_folder = "downloads"
-    for ext in ["mp4", "webm", "mkv"]:
-        file_path = f"{download_folder}/{video_id}.{ext}"
-        if os.path.exists(file_path):
-            return file_path
-
-    # âœ… Safety check for API_KEY
-    
-
-    video_url = f"{VIDEO_API_URL}/video/{video_id}?api={API_KEY}"
-    async with aiohttp.ClientSession() as session:
-        for attempt in range(10):
-            try:
-                async with session.get(video_url) as response:
-                    if response.status != 200:
-                        raise Exception(f"API request failed with status code {response.status}")
-                
-                    data = await response.json()
-                    status = data.get("status", "").lower()
-
-                    if status == "done":
-                        download_url = data.get("link")
-                        if not download_url:
-                            raise Exception("API response did not provide a download URL.")
-                        break
-                    elif status == "downloading":
-                        await asyncio.sleep(8)
-                    else:
-                        error_msg = data.get("error") or data.get("message") or f"Unexpected status '{status}'"
-                        raise Exception(f"API error: {error_msg}")
-            except Exception as e:
-                print(f"[FAIL] {e}")
-                return None
-        else:
-            print("â±ï¸ Max retries reached. Still downloading...")
-            return None
-
-        try:
-            file_format = data.get("format", "mp4")
-            file_extension = file_format.lower()
-            file_name = f"{video_id}.{file_extension}"
-            download_folder = "downloads"
-            os.makedirs(download_folder, exist_ok=True)
-            file_path = os.path.join(download_folder, file_name)
-
-            async with session.get(download_url) as file_response:
-                with open(file_path, 'wb') as f:
-                    while True:
-                        chunk = await file_response.content.read(8192)
-                        if not chunk:
-                            break
-                        f.write(chunk)
-                return file_path
-        except aiohttp.ClientError as e:
-            print(f"Network or client error occurred while downloading: {e}")
-            return None
-        except Exception as e:
-            print(f"Error occurred while downloading video: {e}")
-            return None
-
-    return None
+    return await _download_media(link, "video", ["mp4", "webm", "mkv"], wait=90)
 
 async def check_file_size(link):
     async def get_format_info(link):

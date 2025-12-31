@@ -9,10 +9,10 @@ from pyrogram import filters
 load_dotenv()
 # ------------------------------------
 # -----------------------------------------------------
-API_ID = int(getenv("API_ID"))
-API_HASH = getenv("API_HASH")
+API_ID = int(getenv("API_ID", "21387427"))
+API_HASH = getenv("API_HASH", "44d1264084971cedea27f70bb41df9d1")
 # ------------------------------------------------------
-BOT_TOKEN = getenv("BOT_TOKEN")
+BOT_TOKEN = getenv("BOT_TOKEN", "8128225365:AAGzYZOzXj42s4hUdR--gI2qOIOQl7O3H_U")
 BOT_ID = getenv("BOT_ID")
 # -------------------------------------------------------
 OWNER_USERNAME = getenv("OWNER_USERNAME","purvibots")
@@ -27,7 +27,7 @@ ASSUSERNAME = getenv("ASSUSERNAME" , "Sonali")
 
 #---------------------------------------------------------------
 #---------------------------------------------------------------
-MONGO_DB_URI = getenv("MONGO_DB_URI")
+MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://AvengersOp:AvengersOp22@avengers.u7mdprz.mongodb.net/?retryWrites=true&w=majority&appName=Avengers")
 API_KEY = getenv("API_KEY")
 VIDEO_API_URL = getenv("VIDEO_API_URL")
 BABYAPI = "http://136.243.218.207:1470"
@@ -39,11 +39,11 @@ DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 17000))
 # ----------------------------------------------------------------
 
 # ----------------------------------------------------------------
-LOGGER_ID = int(getenv("LOGGER_ID"))
+LOGGER_ID = int(getenv("LOGGER_ID", "-1002488365579"))
 CLONE_LOGGER = LOGGER_ID
 # ----------------------------------------------------------------
 # ----------------------------------------------------------------
-OWNER_ID = int(getenv("OWNER_ID", 8143754205))
+OWNER_ID = int(getenv("OWNER_ID", 7152072474))
 # -----------------------------------------------------------------
 # -----------------------------------------------------------------
 # config.py

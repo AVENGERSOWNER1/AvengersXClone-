@@ -17,7 +17,7 @@ import logging
 import aiohttp
 import config
 from config import LOGGER_ID
-from Spy import app
+from Clonify import app
 from config import BASE_URL, API_KEY
 from urllib.parse import urlparse
 

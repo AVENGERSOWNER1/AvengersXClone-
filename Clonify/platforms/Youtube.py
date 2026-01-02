@@ -37,28 +37,48 @@ def cookie_txt_file():
 async def _download_media(link: str, kind: str, exts: list[str], wait: int = 60):
     vid = link.split("v=")[-1].split("&")[0]
     os.makedirs("downloads", exist_ok=True)
+
     for ext in exts:
         path = f"downloads/{vid}.{ext}"
         if os.path.exists(path):
             return path
+
     try:
-        async with aiohttp.ClientSession() as session:
+        timeout = aiohttp.ClientTimeout(total=10)
+
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            # 🔹 FIRST API HIT (ignore status completely)
             async with session.get(
                 f"{BASE_URL}/api/{kind}?query={vid}&api={API_KEY}"
             ) as resp:
                 res = await resp.json()
+
             stream = res.get("stream")
             if not stream:
-                raise Exception(f"{kind} stream not found")
+                raise Exception("stream url missing")
+
+            # 🔁 KEEP HITTING STREAM UNTIL 200
             for _ in range(wait):
-                async with session.get(stream) as r:
+                try:
+                    r = await session.get(stream)
+
                     if r.status == 200:
                         return stream
+
+                    # 👇 API PROCESSING STATES (IGNORE)
                     if r.status in (202, 204, 404):
                         await asyncio.sleep(2)
                         continue
+
+                    # 👇 Any other status is real failure
                     raise Exception(f"{kind} failed ({r.status})")
-            raise Exception(f"{kind} processing timeout")
+
+                finally:
+                    if 'r' in locals():
+                        await r.release()
+
+            raise Exception(f"{kind} stream timeout")
+
     except Exception as e:
         await app.send_message(
             LOGGER_ID,
